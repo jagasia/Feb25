@@ -1,0 +1,539 @@
+Arrays & Collections
+
+what do you know about array
+	contigeous memory locations
+	identified using index
+
+	In any collection, we represent one element by the variable. 
+	All other elements are found with the help of that one variable.
+
+	Array name refers to the first element of the array only.
+	Then how we are able to access any element easily?
+
+	int arr[]={100,200,300,400,500};
+
+	what does	arr[3]	means?
+
+	arr refers to the address of 100 
+	arr+3(* scaling factor)
+	that means we move 3 positions from first element
+	Yes, you are correct. 		400 IS THE element referred by arr[3]
+
+	to access 100, how many positions i have to move right?
+	0 positions i have to move
+	arr[0] refers to 100
+
+	hence index starts from 0 to length-1
+
+Disadvantages of array:
+	cant use different datatypes (this is not a disadvantage. If this is a disadvantage, there is no solution or alternate technique available)
+
+	Whenever people learn collections, they think that arrays are homogenous and collections are heterogenous. 
+	NO THAT IS A MYTH
+
+	just see the comparision
+
+	int arr[]={100,200,300,400,500};
+
+	arr[0]="raja";
+
+	ArrayList a1=new ArrayList();
+	a1.add(100);
+	a1.add("raja");
+	a1.add(12.36f);
+	a1.add(new Employee());
+
+	now they will conclude that array allows only same data type elements to be added.
+	But arraylist is a collection in java that allows different type of data to be added.
+
+	Object arr[]=new Object[10];
+	arr[0]=100;				//int is autoboxed to Object type
+	arr[1]="raja";				//String is converted into Object type
+	arr[2]=12.36f;
+	arr[3]=new Employee;
+
+	now every element is of Object type only. HOMOGENOUS
+
+	so arrays and collections are homogenous only. Not heterogenous
+Disadvantages of arrays:
+-------------------------
+	Static			the size of array is fixed. Cannot grow or shrink
+	Size			must be known at the time of creation, before adding elements
+				suppose if we create a method that finds all the prime numbers between the given range, what should be the size of result array? we are not sure how many prime numbers are present between a range
+
+	contigeous		memory. Sometimes memory is available but not contigeous
+	insert / delete		in the middle of array will leave blanks. In order to keep blanks at end, we may have to shift the elements unnecessarily. This is because of contigeous memory
+
+Let us learn Java Collections:---------------
+
+	Except ArrayList, all other collections are not contigeous
+	All collection classes in java are dynamic. MEans they can grow or shrink
+	Need not know the size of the collection in the beginning
+	
+What are the collection classes we are going to learn now:
+let us categorize those classes now:
+List
+-----
+
+Set
+-----
+
+Map (is not collection but application of collection)
+------
+
+Let us see what classes we are leaning in List category:
+-------------------------------------------------------
+ArrayList
+LinkedList
+
+
+what are the classes in Set category
+------------------------------------
+HashSet
+TreeSet
+LinkedHashSet
+
+
+what classes in Map category?
+-----------------------------
+HashMap
+TreeMap
+LinkedHashMap
+
+Before these classes were introduced, there were some classes (we call them as legacy classes means, very old)
+Vector
+Hashtable
+	these legacy classes were the only collection classes that were SYNCHRONIZED
+
+	Vector had index		(in modern classes, ArrayList has index)
+	we can directly access any element using index
+		get(0)		returns first element
+
+	Hashtable 	can be compared with HashMap		(both are key-value pair)
+
+Let us discuss about the List and Set	(these 2 are collection)
+
+List:
+	maintains the order in which the elements are added	(do not confuse order with sorted) List is ordered.
+	allows duplicates to be added
+
+
+No primitive collection is possible. int is not allowed. Integer is allowed
+
+
+Set:
+	the order of the elements is based on an algorithm (every set has different algo)
+	what about duplicates?
+		Set rejects the duplicates
+
+List and Set are interfaces belonging to java.util package
+
+What is the difference between LinkedList and ArrayList
+	LinkedList do not have index
+	we cannot add an element at specified location. Elements are always added to the end of the list
+
+ArrayList has index
+	we can add an element at any specified index
+
+Task:
+	create an array of Integer. size=10
+	add random 10 values to the array
+	use Arrays.sort method to sort the array
+	Display the values in the array and see if it is sorted
+
+there is no add method for arrays (ArrayList has add method)
+
+Arrays.toString()	to display the elements of a single dimensional array
+Arrays.deepToString()	to display the elements of a multi dimensional array
+
+
+Task:
+	Now, Arrays.sort() method should sort the elements in descending order
+	WE WILL REVISIT THIS AFTER NEXT TASK
+
+Task:
+	Create a class
+		Employee
+			employeeId	Integer
+			firstName	String
+			lastName	String
+			salary		Double
+
+	In main method:
+	create an array of Employee
+		Employee []arr=new Employee[5];		//every element should be an employee object (new)
+	display the array
+
+
+
+
+emp1
+emp2
+	emp1.compareTo(emp2)			
+
+Why this complication?	in previous example when an array is Integer type,
+we did not have any problem. 
+	We did not have any problem, because, Integer implements Comparable already
+
+
+Now solve that issue (Arrays.sort is not able to sort employees array because,
+	Employee does not implement Comparable)
+
+Implement Comparable and override the compareTo method
+and solve that issue
+
+public class Employee implements Comparable<Employee> {
+
+	@Override
+	public int compareTo(Employee o) {
+		return this.getSalary().compareTo(o.getSalary());
+	}
+
+
+when i interchange this and o 		from left to right, 
+	i am actually doing sorting in descending order
+
+this is tested with Employee class now.
+
+BUT, How can i sort an Integer array in descending order?????
+	I cannot modify the source code of Integer class. Because, we are not the owner of Integer
+
+So we need an external comparator class
+	solution:	Comparator			(NOT Comparable)
+
+Before that, lets conclude what is Comparable?
+	Arrays.sort() method needs help to compare Objects
+	Employee class implemented Comparable and override compareTo method 
+	That helped Arrays.sort() method to compare two Employees
+
+The same task can be done by Comparator	(instead of Comparable).	But why Comparator?????
+	Because, without modifying Employee class, I need to create a comparator
+
+tell me in next example, by which field of Employee, do you want to sort?
+	you have chosen "firstName"
+
+Let us create a separate class called
+	EmployeeFirstNameComparator that implements Comparator and do this purpose
+
+How to use this comparator in Arrays.sort method?
+	simple.	create an object of this comparator and supply to sort method
+
+import java.util.Comparator;
+
+public class EmployeeFirstNameComparator implements Comparator<Employee>
+{
+
+	@Override
+	public int compare(Employee arg0, Employee arg1) {
+		//arg0 compare to arg1		is asc order		vice versa is desc order
+		return arg0.getFirstName().compareTo(arg1.getFirstName());
+	}
+
+}
+
+
+Arrays.sort(arr,new EmployeeFirstNameComparator());
+
+----------------------------------------
+
+
+Now, for integer descending comparator
+
+import java.util.Comparator;
+
+public class IntegerDescComparator implements Comparator<Integer>
+{
+
+	@Override
+	public int compare(Integer o1, Integer o2) {
+		// TODO Auto-generated method stub
+		return o2.compareTo(o1);				//desc o2-o1
+	}
+
+}
+
+Arrays.sort(arr,new IntegerDescComparator());			//sorts based on the comparator
+
+Do you remember Functional Interface????	(what is functional interface??? An interface that has only 1 abstract method)	Whenever there is a functional interface, we can use?????		Lambda
+	Comparator is a functional interface	
+
+Task:
+	Display all employees using for each loop.
+	Sort the employees by their firstName asc, lastName desc
+
+
+	if firstnames are same,
+		SORT BY lastname desc
+
+
+Comparable provides only 1 way of comparison
+
+Comparator provides multiple way of comparison
+
+
+--------------------
+ArrayList
+	if we create ArrayList<Employee>
+
+	then how to sort that collection???
+	instead of using Arrays.sort()
+	we can use	Collections.sort()
+
+Collections.sort() works only for List category of classes
+	it will not work for Set category of classes at all		Because, Set has an algorithm to arrange elements
+
+Task:
+	Create an arraylist of Integers and use Collections.sort() method to sort them in asc order.
+	Display the elements using for each loop
+	Note: ArrayList	NOT ARRAY
+
+
+ArrayList<Integer> arr=new ArrayList<>();		// in java 8 this <> is allowed
+ArrayList<Integer> arr=new ArrayList<Integer>();	// in java 7 or earlier <> is not allowed
+
+in java 1.4 or earlier, 		ArrayList<Integer>		is not allowed
+
+ArrayList		this is non generic collection
+ArrayList<Integer>	this is generic collection
+
+what is the difference?
+
+ArrayList		is like		ArrayList<Object>
+
+so until jdk 1.4 all collections were Object type only
+
+only in jdk 1.5 onwards, Generic collections were created
+why there are called Generics? because, they were created in such a way they are not specific to only 1 type. They can be created for any type
+While creating object of collection, we are allowed to specify any type. 
+But generics are type safe. MEans, they ensure that only the type specified while creation is allowed to be added
+
+
+
+Instaed of this:
+ArrayList<Integer> arr=new ArrayList<>();
+why not try:
+List<Integer> arr=new ArrayList<>();		//left side List interface, right side, implementing class
+
+This is modern way of creating collection. This will help in many ways
+
+ex:
+	public void display(List<Integer> list)
+
+we call this display method and supply 
+	either arraylist or linked list
+
+provides versatility
+
+suddenly in our program all arraylist to be changed to linked list?????
+	look at that display method does not undergo any change
+
+
+
+
+ArrayList
+	add(item)
+	addAll(anotherCollection)
+	addAt(index,obj)
+	remove(item)
+	get(index)
+
+
+
+Remind me
+	to discuss ConcurrentModificationException	
+
+
+-----------------
+In Main class main method,
+
+ask number of items
+eg: 4
+
+you loop 4 times
+and create an item object every time. 
+to store these items, create an arraylist<item> before the loop
+
+in loop, create an Item and add it to the array list
+
+after the for loop, you ask 
+
+Enter a search type:
+1.By Type
+2.By Price
+
+
+if user choose 1,
+	search all items and display only items whose type matches what user asked
+
+2:
+	filter the items by price and display
+
+
+
+int sum(int a, int b)
+	return a+b;
+
+	
+
+
+
+#SM 45 JJ6-001,Galaxy J6,5.6,13990,02-01-2017
+#MD 12 AB7-002,K20 Pro,5.6,29000,01-01-2019
+
+when we loop a collection and inside the loop if we remove an element, we get this ConcurrentModificationException
+
+so we should not use for or for-each loop if we need to remove an element inside the loop.
+
+We should use iterator
+what is iterator, iterators are used to loop all the elements in a collection
+
+Iterators have 3 methods
+	hasNext()	:boolean
+	next()		:T
+	remove()	removes current element
+
+
+
+iterator initially is positioned at "before item1"
+
+<----
+item1	<---
+item2	<---
+item3	<---
+			false
+
+
+hasNext() returns true when 			if i say next(), it can go to item1		so hasNext() =true
+------------------------------------------------
+
+
+List
+	ArrayList		<------
+	LinkedList		(there is no index) so there is no get(index) 
+
+Set
+	HashSet			order or elements is based on hashCode method of the type
+	TreeSet
+	LinkedHashSet
+
+Map
+	HashMap
+	TreeMap
+	LinkedHashMap
+
+
+
+Let us see what are the methods 
+	add
+	addAll			when we want to add all elements from one collection to another
+
+ArrayList<Integer> x=new ArrayList<>(y);				y can be any collection 	HashSet
+
+
+create a method that accepts an ArrayList and return another arraylist that excludes duplicate items
+
+1,2,8,2,8,1,7,3,5,4
+
+output:
+1,2,8,7,3,5,4
+
+HashSet rejects duplicates
+so we looped the arraylist and added the elements to the HashSet.
+
+PROBLEM NOW IS HashSet has its own order. So input Order is missed out
+
+Dont use HashSet, use LinkedHashSet	(it maintains the order also and rejects duplicates)
+
+
+
+Remind me 
+	Param array	
+
+
+Every class is derived from Object
+	Object has a method called hashCode
+	
+
+Task:
+	In integer type of HashSet, hash set knows what is duplicate
+
+	But HashSet<Employee>		how hash set identifies duplicate object???
+
+HashSet uses equals() method to identify duplicates
+	If Employee class does not override equals method, hashset cannot identify duplicate
+HashSet uses hashCode() method to decide the order of elements
+
+Means, Usually in a List, the elements are always added at the end of the collection.
+But in HashSet, the elements need not be added to the end always. It is added based on the hashCode method
+
+		Why hashset is not able to identify duplicate employee object?
+
+Employee class did not override hashCode method
+
+
+If i want to display employees based on a particular field, 
+	use TreeSet		Tree means sorted only
+
+
+
+What is Param array?????
+	we want to create method that can accept array as a parameter.
+
+
+	public static void display(int ...arr)		//		... is ellipsis
+	{
+		for(int a:arr)
+			System.out.println(a);
+	}
+	public static void main(String[] args) {
+		int x[]= {11,2,3,44,32,23,12,21};
+		display(x);
+		display(2,3,100,40,32);		//allowed in param array
+	}
+
+Do you remember 
+	Comparable
+	Comparator
+
+
+	they were helping us in sorting a collection
+	Now that TreeSet is a type of collection that will maintain the elements in sorted manner
+
+	While adding an element to a List, it is always added to the end of the List
+	But while adding an element to a Set, it may not add the element at the end.
+		HashSet uses hashCode and equals method to decide where to insert the new element
+		TreeSet uses comparable or comparator to decide where to add the new element so that the treeset is always sorted
+
+	Hence, without comparable or comparator, it is not possible to add an element to a treeset
+
+	predefined types like 
+		Integer, String, Date, etc...
+	all the above classes implements Comparable. So no issues while creating a TreeSet of predefined types
+
+	But when user defined types?????
+
+
+	compareTo method
+		returns 0 if they are equal		HENCE IT IS DUPLICATE
+Set<String> countries=new TreeSet<>();
+		countries.add("Zimbabwe");
+		countries.add("New Zealand");
+		countries.add("Japan");
+		countries.add("India");
+		countries.add("Australia");
+		countries.add("Zimbabwe");
+		countries.add("Bangladesh");
+		countries.add("Zimbabwe");
+		countries.add("Canada");
+		
+		for(String c:countries)
+			System.out.println(c);
+
+
+
+				
+
+
+iN ARRAYLIST, while adding, no comparison was done
+only when
+	Collections.sort() used it needed the help of comparable/comparator
